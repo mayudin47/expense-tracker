@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+      <title>
+        Expense Tracker</title>
+      <style>
+        *{margin:0;
+        padding:0;
+        box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;
+        background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+        min-height:100vh;
+        padding:20px}
+        .container{max-width:600px;
+        margin:0 auto;
+        background:white;
+        border-radius:15px;
+        padding:30px;
+        box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+        h1{color:#333;
+        margin-bottom:30px;
+        text-align:center}
+        .input-group{display:flex;
+        gap:10px;
+        margin-bottom:20px}
+        input{flex:1;
+        padding:10px;
+        border:2px solid #ddd;
+        border-radius:8px}
+        input:focus{outline:none;
+        border-color:#667eea}
+        button{padding:10px 20px;
+        background:#667eea;
+        color:white;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:600}
+        button:hover{background:#764ba2}
+        .summary{display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+        margin-bottom:20px}
+        .summary-item{background:#f5f5f5;
+        padding:15px;
+        border-radius:8px;
+        text-align:center}
+        .summary-value{font-size:1.8rem;
+        font-weight:bold;
+        color:#667eea}
+        .summary-label{font-size:0.9rem;
+        color:#666;
+        margin-top:5px}
+        #expenses{list-style:none}
+        .expense-item{display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:12px;
+        background:#f5f5f5;
+        border-radius:8px;
+        margin-bottom:10px}
+        .expense-amount{font-weight:bold;
+        color:#667eea}
+        .delete{background:#ef4444;
+        padding:5px 10px;
+        font-size:0.8rem}
+        .delete:hover{background:#dc2626}
+        </style>
+      </head>
+    <body>
+      <div class="container">
+        <h1>
+          💰 Expense Tracker</h1>
+        <div class="input-group">
+          <input type="text" id="desc" placeholder="Description">
+            <input type="number" id="amount" placeholder="Amount">
+              <button onclick="add()">
+                Add</button>
+              </div>
+            <div class="summary">
+              <div class="summary-item">
+                <div class="summary-value" id="total">
+                  0</div>
+                <div class="summary-label">
+                  Total</div>
+                </div>
+              <div class="summary-item">
+                <div class="summary-value" id="count">
+                  0</div>
+                <div class="summary-label">
+                  Items</div>
+                </div>
+              </div>
+            <ul id="expenses">
+              </ul>
+            </div>
+          <script>
+            let expenses=JSON.parse(localStorage.getItem('expenses'))||[];
+            function render(){const list=document.getElementById('expenses');
+            list.innerHTML=expenses.map((e,i)=>
+            `<li class="expense-item">
+              <span>
+                ${e.desc}
+                </span>
+              <span class="expense-amount">
+                $${e.amount}
+                </span>
+              <button class="delete" onclick="del(${i}
+              )">
+              ✕</button>
+            </li>
+          `).join('');
+          const total=expenses.reduce((s,e)=>
+          s+parseFloat(e.amount),0);
+          document.getElementById('total').textContent=total.toFixed(2);
+          document.getElementById('count').textContent=expenses.length;
+          }
+          function add(){const desc=document.getElementById('desc').value;
+          const amount=document.getElementById('amount').value;
+          if(desc&&amount){expenses.push({desc,amount}
+          );
+          localStorage.setItem('expenses',JSON.stringify(expenses));
+          document.getElementById('desc').value='';
+          document.getElementById('amount').value='';
+          render();
+          }
+          }
+          function del(i){expenses.splice(i,1);
+          localStorage.setItem('expenses',JSON.stringify(expenses));
+          render();
+          }
+          render();
+          </script>
+        </body>
+      </html>
